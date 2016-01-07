@@ -1,4 +1,5 @@
 class TagsController < ApplicationController
+  before_filter :require_login, only: [:destroy]
 
   def index
     @tags = Tag.all
@@ -15,6 +16,15 @@ class TagsController < ApplicationController
     flash.notice = "Tag '#{@tag.name}' Deleted!"
 
     redirect_to tags_path
+  end
+
+  private
+  
+  def require_login
+    unless current_user
+      redirect_to login_path
+      return false
+    end
   end
 
 

@@ -1,6 +1,8 @@
 class ArticlesController < ApplicationController
   include ArticlesHelper
 
+  before_filter :require_login, only: [:new, :create, :edit, :update, :destroy]
+
     def index
       @articles = Article.all
     end
@@ -45,6 +47,15 @@ class ArticlesController < ApplicationController
       flash.notice = "Article '#{@article.title}' Deleted!"
 
       redirect_to articles_path
+    end
+
+    private
+
+    def require_login
+      unless current_user
+        redirect_to login_path
+        return false
+      end
     end
 
 end
